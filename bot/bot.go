@@ -53,5 +53,7 @@ func (b *Bot) ProcessMessage(w http.ResponseWriter, r *http.Request, ps httprout
 		return
 	}
 
-	b.SendMessage(fmt.Sprintf("Repeating what you said: %s", groupmeMessage.Text))
+	if groupmeMessage.Name != "apt grocery" {
+		b.SendMessage(fmt.Sprintf("Repeating what you said: %s", groupmeMessage.Text))
+	}
 }
