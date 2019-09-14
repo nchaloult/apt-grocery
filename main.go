@@ -20,6 +20,7 @@ func main() {
 	router := httprouter.New()
 	router.POST("/", bot.ProcessMessage)
 
+	fmt.Println("Listening on port 5000...")
 	log.Fatal(http.ListenAndServe(":5000", router))
 
 	fmt.Println("Yeeeeeeeeeeeeeeeeeeeeeet")
