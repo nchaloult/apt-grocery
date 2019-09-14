@@ -2,10 +2,18 @@ package bot
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
+
+	"github.com/julienschmidt/httprouter"
 )
+
+type groupmeCallbackBody struct {
+	Name string `json:"name"`
+	Text string `json:"text"`
+}
 
 type Bot struct {
 	botID string
@@ -34,4 +42,16 @@ func (b *Bot) SendMessage(msg string) {
 	defer res.Body.Close()
 
 	log.Printf("Response status code: %v\n", res.Status)
+}
+
+// ProcessMessage is called when a new message is posted in our GroupMe group
+func (b *Bot) ProcessMessage(w http.ResponseWriter, r *http.Request, ps httprouter.Params) {
+	groupmeMessage := groupmeCallbackBody{}
+	err := json.NewDecoder(r.Body).Decode(&groupmeMessage)
+	if err != nil {
+		http.Error(w, "Failed to parse GroupMe request to callback: ", http.StatusInternalServerError)
+		return
+	}
+
+	b.SendMessage(fmt.Sprintf("Repeating what you said: %s", groupmeMessage.Text))
 }
