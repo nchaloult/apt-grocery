@@ -14,14 +14,15 @@ import (
 )
 
 func main() {
+	port := os.Getenv("PORT")
 	botID := os.Getenv("BOT_ID")
 	bot := bot.NewBot(botID)
 
 	router := httprouter.New()
 	router.POST("/", bot.ProcessMessage)
 
-	fmt.Println("Listening on port 5000...")
-	log.Fatal(http.ListenAndServe(":5000", router))
+	fmt.Printf("Listening on port %s...\n", port)
+	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), router))
 
 	fmt.Println("Yeeeeeeeeeeeeeeeeeeeeeet")
 }
