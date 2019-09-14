@@ -14,4 +14,5 @@ func main() {
 
 	bot := bot.NewBot(botID)
 	bot.SendMessage("first message sent through Bot struct abstraction")
+	bot.SendMessage("Don't mind me, just yeeting my shit through here")
 }
