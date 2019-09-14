@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -20,4 +21,6 @@ func main() {
 	router.POST("/", bot.ProcessMessage)
 
 	log.Fatal(http.ListenAndServe(":5000", router))
+
+	fmt.Println("Yeeeeeeeeeeeeeeeeeeeeeet")
 }
