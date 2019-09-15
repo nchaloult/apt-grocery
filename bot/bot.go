@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -54,6 +55,8 @@ func (b *Bot) ProcessMessage(w http.ResponseWriter, r *http.Request, ps httprout
 	}
 
 	if groupmeMessage.Name != "apt grocery" {
-		b.SendMessage(fmt.Sprintf("Repeating what you said: %s", groupmeMessage.Text))
+		if strings.HasPrefix(groupmeMessage.Text, ".gl") {
+			b.SendMessage(fmt.Sprintf("Repeating what you said: %s", groupmeMessage.Text))
+		}
 	}
 }
