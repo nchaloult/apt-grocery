@@ -6,7 +6,7 @@ import (
 	"net/http"
 	"os"
 
-	"github.com/nchaloult/apt-grocery/bot"
+	"apt-grocery/bot"
 
 	// Automatically load in env vars from .env file
 	_ "github.com/joho/godotenv/autoload"
