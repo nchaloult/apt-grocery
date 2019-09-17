@@ -8,6 +8,8 @@ import (
 	"net/http"
 	"strings"
 
+	"apt-grocery/list"
+
 	"github.com/julienschmidt/httprouter"
 )
 
@@ -54,9 +56,18 @@ func (b *Bot) ProcessMessage(w http.ResponseWriter, r *http.Request, ps httprout
 		return
 	}
 
-	if groupmeMessage.Name != "apt grocery" {
-		if strings.HasPrefix(groupmeMessage.Text, ".gl") {
+	if groupmeMessage.Name != "apt grocery" && strings.HasPrefix(groupmeMessage.Text, ".gl") {
+		input := strings.TrimSpace(groupmeMessage.Text)[4:]
+
+		if input == "view" {
+			// TODO: this is awful. Print all the list items in one message, separated by commas
+			for _, item := range list.ReadList() {
+				b.SendMessage(item)
+			}
+			b.SendMessage("end")
+		} else {
 			b.SendMessage(fmt.Sprintf("Repeating what you said: %s", groupmeMessage.Text))
 		}
+
 	}
 }
