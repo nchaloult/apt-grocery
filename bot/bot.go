@@ -66,9 +66,14 @@ func (b *Bot) ProcessMessage(w http.ResponseWriter, r *http.Request, ps httprout
 			}
 			fullList = strings.TrimRight(fullList, ", ")
 			b.SendMessage(fullList)
+		} else if input[:3] == "add" {
+			//TODO: Make this a lot better to handle big brain users
+			list.WriteList([]string {input[4:]})
+		
 		} else {
 			b.SendMessage(fmt.Sprintf("Repeating what you said: %s", groupmeMessage.Text))
 		}
+
 
 	}
 }

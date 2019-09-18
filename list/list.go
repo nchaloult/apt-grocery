@@ -23,3 +23,20 @@ func ReadList() []string {
 
 	return list.Items
 }
+
+// WriteList takes an input from the user and writes to a file, list.json
+func WriteList(items []string) {
+	oldList := ReadList()
+	oldList = append(oldList, items...)
+	newList := List{Items: oldList}
+	jsonAsBytes, err := json.Marshal(newList)
+	if err != nil {
+		//TODO: Fix this error handling
+		panic(err)
+	}
+	err = ioutil.WriteFile("list.json", jsonAsBytes, 0644)
+	if err != nil {
+		//TODO: Fix this error handling
+		panic(err)
+	}
+}
