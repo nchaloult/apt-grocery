@@ -60,11 +60,12 @@ func (b *Bot) ProcessMessage(w http.ResponseWriter, r *http.Request, ps httprout
 		input := strings.TrimSpace(groupmeMessage.Text)[4:]
 
 		if input == "view" {
-			// TODO: this is awful. Print all the list items in one message, separated by commas
+			fullList := ""
 			for _, item := range list.ReadList() {
-				b.SendMessage(item)
+				fullList += item + ", "
 			}
-			b.SendMessage("end")
+			fullList = strings.TrimRight(fullList, ", ")
+			b.SendMessage(fullList)
 		} else {
 			b.SendMessage(fmt.Sprintf("Repeating what you said: %s", groupmeMessage.Text))
 		}
