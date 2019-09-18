@@ -15,6 +15,9 @@ import (
 
 func main() {
 	port := os.Getenv("PORT")
+	if port == "" {
+		port = "5000"
+	}
 	botID := os.Getenv("BOT_ID")
 	bot := bot.NewBot(botID)
 
