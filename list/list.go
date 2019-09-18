@@ -23,6 +23,7 @@ func ReadList() []string {
 
 	return list.Items
 }
+
 // WriteList takes an input from the user and writes to a file, list.json
 func WriteList(items []string) {
 	oldList := ReadList()
