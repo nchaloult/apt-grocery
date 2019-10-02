@@ -60,16 +60,13 @@ func (b *Bot) ProcessMessage(w http.ResponseWriter, r *http.Request, ps httprout
 		input := strings.TrimSpace(groupmeMessage.Text)[4:]
 
 		if input == "view" {
-			fullList := ""
-			for _, item := range list.ReadList() {
-				fullList += item + ", "
+			for user, list := range list.ReadList() {
+				b.SendMessage(user + ": " + strings.Join(list, ", "))
 			}
-			fullList = strings.TrimRight(fullList, ", ")
-			b.SendMessage(fullList)
 		} else if input[:3] == "add" {
-			//TODO: Make this a lot better to handle big brain users
-			list.WriteList([]string {input[4:]})
-			b.SendMessage("Added")
+			//TODO: Separate/split the input at commas
+			list.WriteList(groupmeMessage.Name, []string{input[4:]})
+			b.SendMessage("Added: " + input[4:])
 		} else {
 			b.SendMessage(fmt.Sprintf("Repeating what you said: %s", groupmeMessage.Text))
 		}

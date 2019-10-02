@@ -5,31 +5,27 @@ import (
 	"io/ioutil"
 )
 
-// List is a struct representation of the contents of list.json
-type List struct {
-	Items []string `json:"items"`
-}
+// list is a representation of the contents of list.json
+var list map[string][]string
 
 // ReadList returns the currently-stored grocery list --- a list of strings
-func ReadList() []string {
+func ReadList() map[string][]string {
 	file, err := ioutil.ReadFile("list.json")
 	if err != nil {
 		// TODO: better error handling
 		panic(err)
 	}
 
-	list := List{}
 	json.Unmarshal(file, &list)
 
-	return list.Items
+	return list
 }
 
 // WriteList takes an input from the user and writes to a file, list.json
-func WriteList(items []string) {
-	oldList := ReadList()
-	oldList = append(oldList, items...)
-	newList := List{Items: oldList}
-	jsonAsBytes, err := json.Marshal(newList)
+func WriteList(user string, items []string) {
+	list := ReadList()
+	list[user] = append(list[user], items...)
+	jsonAsBytes, err := json.Marshal(list)
 	if err != nil {
 		//TODO: Fix this error handling
 		panic(err)
