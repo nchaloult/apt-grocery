@@ -1,18 +1,19 @@
 package list
 
-import "testing"
+import (
+	"reflect"
+	"testing"
+)
 
 func TestReadList(t *testing.T) {
 	got := ReadList()
-	want := []string{"milk", "eggs"}
 
-	if len(got) != len(want) {
-		t.Errorf("ReadList(): got: %q, want: %q", got, want)
-	}
+	want := make(map[string][]string, 2)
+	want["foo"] = []string{"milk"}
+	want["bar"] = []string{"eggs", "bread"}
+	want["baz"] = []string{}
 
-	for i := 0; i < len(got); i++ {
-		if got[i] != want[i] {
-			t.Errorf("ReadList(): got: %q, want: %q", got[i], want[i])
-		}
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("ReadList():\ngot:  %v\nwant: %v", got, want)
 	}
 }

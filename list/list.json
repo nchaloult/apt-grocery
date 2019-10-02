@@ -1,3 +1,5 @@
 {
-    "items": ["milk", "eggs"]
+    "foo": ["milk"],
+    "bar": ["eggs", "bread"],
+    "baz": []
 }
