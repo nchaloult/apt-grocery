@@ -60,9 +60,18 @@ func (b *Bot) ProcessMessage(w http.ResponseWriter, r *http.Request, ps httprout
 		input := strings.TrimSpace(groupmeMessage.Text)[4:]
 
 		if input == "view" {
-			for user, list := range list.ReadList() {
-				b.SendMessage(user + ": " + strings.Join(list, ", "))
+			list := list.ReadList()
+
+			if len(list) < 1 {
+				b.SendMessage("The list is empty")
+			} else {
+				for user, list := range list {
+					b.SendMessage(user + ": " + strings.Join(list, ", "))
+				}
 			}
+		} else if input[:5] == "clear" {
+			list.ClearList()
+			b.SendMessage("List cleared")
 		} else if input[:3] == "add" {
 			//TODO: Separate/split the input at commas
 			list.WriteList(groupmeMessage.Name, []string{input[4:]})
