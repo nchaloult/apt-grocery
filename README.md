@@ -8,6 +8,15 @@ The instructions below serve as reminders for us as we revisit this project peri
 1. `heroku container:release web`
 1. `heroku logs -t` to see what's going on
 
+## Production Environment Configurations
+
+apt-grocery's production environment needs to have the following environment variables set:
+
+* `BOT_ID`: secret GroupMe bot ID
+    * Given to you when you create a bot at [https://dev.groupme.com/bots/new](https://dev.groupme.com/bots/new)
+* `RUN_ENV`: set to `prod`
+    * This determines the path where `list.json` is expected to be
+
 # To-Do List
 
 ## New Features
