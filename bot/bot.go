@@ -22,12 +22,18 @@ type groupmeCallbackBody struct {
 
 // Bot exposes behaviors for a GroupMe bot
 type Bot struct {
-	botID string
+	id     string
+	name   string
+	prefix string
 }
 
 // NewBot returns a pointer to a new Bot struct
-func NewBot(botID string) *Bot {
-	return &Bot{botID: botID}
+func NewBot(id, name, prefix string) *Bot {
+	return &Bot{
+		id:     id,
+		name:   name,
+		prefix: prefix,
+	}
 }
 
 // SendMessage sends the provided message to a GroupMe group as the bot.
@@ -35,10 +41,10 @@ func NewBot(botID string) *Bot {
 // Currently not configured to choose which group to send the message to;
 // assumes that bot is a member of only one group.
 func (b *Bot) SendMessage(msg string) {
-	log.Printf("SendMessage() invoked with message: %s", msg)
+	log.Printf("SendMessage(): invoked with message: \"%s\"", msg)
 
 	// Create POST request body to send to GroupMe's API
-	reqBodyAsStr := fmt.Sprintf(`{"text": "%s", "bot_id": "%s"}`, msg, b.botID)
+	reqBodyAsStr := fmt.Sprintf(`{"text": "%s", "bot_id": "%s"}`, msg, b.id)
 	reqBodyAsJSONBytes := []byte(reqBodyAsStr)
 
 	// Turn that request body into an HTTP request
@@ -74,9 +80,9 @@ func (b *Bot) ProcessMessage(w http.ResponseWriter, r *http.Request, ps httprout
 	}
 
 	// If our bot was invoked:
-	if groupmeMessage.Name != "apt grocery" && strings.HasPrefix(groupmeMessage.Text, ".gl") {
-		// Remove the ".gl" prefix from the message contents
-		input := strings.TrimSpace(groupmeMessage.Text)[4:]
+	if groupmeMessage.Name != b.name && strings.HasPrefix(groupmeMessage.Text, b.prefix) {
+		// Remove the bot's prefix from the message contents
+		input := strings.TrimSpace(groupmeMessage.Text)[len(b.prefix)+1:]
 
 		if input == "view" {
 			log.Print("ProcessMessage(): bot invoked with \"view\" command")

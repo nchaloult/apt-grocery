@@ -20,7 +20,7 @@ func main() {
 	}
 
 	botID := os.Getenv("BOT_ID")
-	bot := bot.NewBot(botID)
+	bot := bot.NewBot(botID, "apt grocery", ".gl")
 
 	// GroupMe sends a POST request to a callback URL, which you specify, when a
 	// new message is posted in a group that your bot is in. Listen for those
