@@ -105,8 +105,8 @@ func (b *Bot) ProcessMessage(w http.ResponseWriter, r *http.Request, ps httprout
 		} else if input[:3] == "add" {
 			log.Print("ProcessMessage(): bot invoked with \"add\" command")
 
-			//TODO: Separate/split the input at commas
-			list.WriteList(groupmeMessage.Name, []string{input[4:]})
+			// Separate each new list item in user input by commas
+			list.WriteList(groupmeMessage.Name, strings.Split(input[4:], ", "))
 			b.SendMessage("Added: " + input[4:])
 		} else {
 			log.Print("ProcessMessage(): command/input not recognized.")
