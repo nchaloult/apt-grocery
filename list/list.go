@@ -6,6 +6,7 @@ import (
 	"os"
 )
 
+// Relative path at which list.json persistent storage file can be found
 var listPath string
 
 func init() {
