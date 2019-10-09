@@ -21,7 +21,7 @@ apt-grocery's production environment needs to have the following environment var
 
 ## New Features
 
-* Store who adds which items to the apartment-wide list
-    * So whoever runs to the store can bill each person for what they asked for
+* ~~Store who adds which items to the apartment-wide list~~ ✅
+    * ~~So whoever runs to the store can bill each person for what they asked for~~
 * Store prices for commonly-requested items
     * Once this collection of prices gets large, we can make a rough calculation of the total grocery bill before anyone goes to the store
