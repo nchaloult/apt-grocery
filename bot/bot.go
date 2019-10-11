@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"strings"
 
-	"apt-grocery/list"
+	"apt-grocery/storage"
 
 	"github.com/julienschmidt/httprouter"
 )
@@ -87,7 +87,7 @@ func (b *Bot) ProcessMessage(w http.ResponseWriter, r *http.Request, ps httprout
 		if input == "view" {
 			log.Print("ProcessMessage(): bot invoked with \"view\" command")
 
-			list := list.ReadList()
+			list := storage.ReadList()
 
 			if len(list) < 1 {
 				b.SendMessage("The list is empty")
@@ -100,13 +100,13 @@ func (b *Bot) ProcessMessage(w http.ResponseWriter, r *http.Request, ps httprout
 		} else if input[:5] == "clear" {
 			log.Print("ProcessMessage(): bot invoked with \"clear\" command")
 
-			list.ClearList()
+			storage.ClearList()
 			b.SendMessage("List cleared")
 		} else if input[:3] == "add" {
 			log.Print("ProcessMessage(): bot invoked with \"add\" command")
 
 			// Separate each new list item in user input by commas
-			list.WriteList(groupmeMessage.Name, strings.Split(input[4:], ", "))
+			storage.WriteList(groupmeMessage.Name, strings.Split(input[4:], ", "))
 			b.SendMessage("Added: " + input[4:])
 		} else {
 			log.Print("ProcessMessage(): command/input not recognized.")

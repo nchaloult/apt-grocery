@@ -1,4 +1,4 @@
-package list
+package storage
 
 import (
 	"encoding/json"
@@ -9,13 +9,15 @@ import (
 // Relative path at which list.json persistent storage file can be found
 var listPath string
 
+// Initialize paths to .json files we're using for persistent storage.
+// Depends on what environment we're running in (dev or prod)
 func init() {
 	runEnv := os.Getenv("RUN_ENV")
 
 	if runEnv == "prod" {
 		listPath = "list.json"
 	} else {
-		listPath = "list/list.json"
+		listPath = "storage/list.json"
 	}
 }
 
