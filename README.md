@@ -1,4 +1,4 @@
-# apt-grocery
+# apt-grocery [![Build Status](https://travis-ci.org/nchaloult/apt-grocery.svg?branch=master)](https://travis-ci.org/nchaloult/apt-grocery)
 
 The instructions below serve as reminders for us as we revisit this project periodically, rather than instructions for people unfamiliar with the project.
 
