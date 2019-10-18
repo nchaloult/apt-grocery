@@ -8,6 +8,8 @@ import (
 
 // Relative path at which list.json persistent storage file can be found
 var listPath string
+// Relative path at which prices.json persistent storage file can be found
+var pricesPath string
 
 // Initialize paths to .json files we're using for persistent storage.
 // Depends on what environment we're running in (dev or prod)
@@ -16,8 +18,10 @@ func init() {
 
 	if runEnv == "prod" {
 		listPath = "list.json"
+		pricesPath = "prices.json"
 	} else {
 		listPath = "storage/list.json"
+		pricesPath = "storage/prices.json"
 	}
 }
 
@@ -64,6 +68,39 @@ func ClearList() {
 		panic(err)
 	}
 	err = ioutil.WriteFile(listPath, jsonAsBytes, 0644)
+	if err != nil {
+		//TODO: Fix this error handling
+		panic(err)
+	}
+}
+
+// ReadPrices returns the currently-stored prices for commonly-purchased items
+func ReadPrices() map[string]float32 {
+	file, err := ioutil.ReadFile(pricesPath)
+	if err != nil {
+		// TODO: better error handling
+		panic(err)
+	}
+
+	// prices is a representation of the contents of prices.json
+	var prices map[string]float32
+	json.Unmarshal(file, &prices)
+
+	return prices
+}
+
+// WritePrice adds a new price for a commonly-purchased item in prices.json.
+// If the item involved is already present in prices.json, then that price is
+// overwritten.
+func WritePrice(item string, price float32) {
+	prices := ReadPrices()
+	prices[item] = price
+	jsonAsBytes, err := json.Marshal(prices)
+	if err != nil {
+		//TODO: Fix this error handling
+		panic(err)
+	}
+	err = ioutil.WriteFile(pricesPath, jsonAsBytes, 0644)
 	if err != nil {
 		//TODO: Fix this error handling
 		panic(err)

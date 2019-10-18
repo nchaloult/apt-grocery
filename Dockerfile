@@ -8,4 +8,5 @@ FROM heroku/heroku:18
 WORKDIR /app
 COPY --from=0 /src/bin/apt-grocery /app
 COPY storage/list.json /app
+COPY storage/prices.json /app
 CMD ["./apt-grocery"]
