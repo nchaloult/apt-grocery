@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 	"strings"
 
 	"apt-grocery/storage"
@@ -97,6 +98,26 @@ func (b *Bot) ProcessMessage(w http.ResponseWriter, r *http.Request, ps httprout
 					b.SendMessage(user + ": " + strings.Join(list, ", "))
 				}
 			}
+		} else if input == "prices" {
+			log.Print("ProcessMessage(): bot invoked with \"prices\" command")
+
+			prices := storage.ReadPrices()
+
+			if len(prices) < 1 {
+				b.SendMessage("There aren't any stored prices for commonly-purchased items")
+			} else {
+				// Send one message with all of the prices that we store
+				//
+				// This one message could get very, very long as we store more and more prices.
+				// Think about a better solution for displaying which prices we've stored.
+				msg := ""
+				for item, price := range prices {
+					msg += fmt.Sprintf("%s: %v, ", item, price)
+				}
+
+				// Trim off trailing comma
+				b.SendMessage(strings.TrimSuffix(msg, ", "))
+			}
 		} else if input[:5] == "clear" {
 			log.Print("ProcessMessage(): bot invoked with \"clear\" command")
 
@@ -108,6 +129,17 @@ func (b *Bot) ProcessMessage(w http.ResponseWriter, r *http.Request, ps httprout
 			// Separate each new list item in user input by commas
 			storage.WriteList(groupmeMessage.Name, strings.Split(input[4:], ", "))
 			b.SendMessage("Added: " + input[4:])
+		} else if input[:5] == "price" {
+			log.Print("ProcessMessage(): bot invoked with \"price\" command")
+
+			input := strings.Split(input[6:], " ")
+			providedPrice, err := strconv.ParseFloat(input[1], 32)
+			if err != nil {
+				b.SendMessage("Couldn't turn your provided price into a number: " + input[1])
+			} else {
+				storage.WritePrice(input[0], float32(providedPrice))
+				b.SendMessage("Added price for " + input[0] + ": " + input[1])
+			}
 		} else {
 			log.Print("ProcessMessage(): command/input not recognized.")
 
