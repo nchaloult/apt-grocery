@@ -97,9 +97,55 @@ func TestClearList(t *testing.T) {
 	restoreList()
 }
 
+func TestReadPrices(t *testing.T) {
+	got := ReadPrices()
+	want := make(map[string]float32, 3)
+	want["milk"] = float32(2.39)
+	want["eggs"] = float32(2.99)
+	want["bread"] = float32(3.29)
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("ReadPrices():\ngot:  %v\nwant: %v", got, want)
+	}
+
+}
+
+func TestWritePrice(t *testing.T) {
+	// Normal use case: adding a new price
+	WritePrice("double stuf oreos", float32(2.99))
+
+	got := ReadPrices()
+	want := make(map[string]float32, 4)
+	want["milk"] = float32(2.39)
+	want["eggs"] = float32(2.99)
+	want["bread"] = float32(3.29)
+	want["double stuf oreos"] = float32(2.99)
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("WritePrice():\ngot:  %v\nwant: %v", got, want)
+	}
+
+	// Overwriting an existing price
+	WritePrice("milk", float32(10)) // Chick-fil-a quarantined all cows to please shareholders
+
+	got = ReadPrices()
+	want = make(map[string]float32, 4)
+	want["milk"] = float32(10)
+	want["eggs"] = float32(2.99)
+	want["bread"] = float32(3.29)
+	want["double stuf oreos"] = float32(2.99)
+
+	if !reflect.DeepEqual(got, want) {
+		t.Errorf("WritePrice():\ngot:  %v\nwant: %v", got, want)
+	}
+
+	// Restore contents of prices.json for future tests
+	restorePrices()
+}
+
 // Some tests evaluate data manipulation functionality. Restore the contents
-// of .json files where data is stored if a test changed its contents. This
-// way, all tests can assume what state that these .json files are currently in.
+// of list.json where data is stored if a test changed its contents. This way,
+// all tests can assume what state list.json is currently in.
 func restoreList() {
 	originalContents := make(map[string][]string, 2)
 	originalContents["foo"] = []string{"milk"}
@@ -111,6 +157,27 @@ func restoreList() {
 		panic(err)
 	}
 	err = ioutil.WriteFile(listPath, jsonAsBytes, 0644)
+	if err != nil {
+		// TODO: Fix this error handling
+		panic(err)
+	}
+}
+
+// Some tests evaluate data manipulation functionality. Restore the contents
+// of prices.json where data is stored if a test changed its contents. This way,
+// all tests can assume what state prices.json is currently in.
+func restorePrices() {
+	originalContents := make(map[string]float32, 3)
+	originalContents["milk"] = float32(2.39)
+	originalContents["eggs"] = float32(2.99)
+	originalContents["bread"] = float32(3.29)
+
+	jsonAsBytes, err := json.Marshal(originalContents)
+	if err != nil {
+		// TODO: Fix this error handling
+		panic(err)
+	}
+	err = ioutil.WriteFile(pricesPath, jsonAsBytes, 0644)
 	if err != nil {
 		// TODO: Fix this error handling
 		panic(err)
